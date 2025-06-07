@@ -101,6 +101,7 @@ namespace SchoolManagementSystem.Admin
                 lblMsg.CssClass = "alert alert-danger";
                 lblMsg.Text = "Delete Succesffully !";
                 GetClass();
+                
             }
             catch (Exception ex)
             {
