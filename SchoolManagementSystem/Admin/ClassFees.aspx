@@ -15,14 +15,11 @@
                 <div class="col-md-6">
                     <label for="ddlClass">Class</label>
                     <asp:DropDownList ID="ddlClass" runat="server" CssClass="form-control"></asp:DropDownList>
-                    <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ErrorMessage="Class is required" 
-                        ControlToValidate="ddlClass" ForeColor="#FF3300" InitialValue="Select Class" SetFocusOnError="True">
-                    </asp:RequiredFieldValidator>
                 </div>
 
                 <div class="col-md-6">
                     <label for="txtFeesAmounts">Fees(Annual)</label>
-                    <asp:TextBox ID="txtFeeAmounts" runat="server" CssClass="form-control" placeholder="Enter Class Name"  TextMode="Number" required></asp:TextBox>
+                    <asp:TextBox ID="txtFeeAmounts" runat="server" CssClass="form-control" placeholder="Enter Class Name"  TextMode="Number" ></asp:TextBox>
                 </div>
 
             </div>
@@ -35,11 +32,23 @@
 
             <div class="row mb-3 mr-lg-5 ml-lg-5">
                 <div class="col-md-6">
-                    <asp:GridView ID="GridView1" runat="server" CssClass="table table-hover" AutoGenerateColumns="False" >
+                    <asp:GridView ID="GridView1" runat="server" CssClass="table table-hover" AutoGenerateColumns="False" DataKeyNames="FeesId" OnPageIndexChanging="GridView1_PageIndexChanging" OnRowDeleting="GridView1_RowDeleting" OnRowEditing="GridView1_RowEditing" OnRowUpdating="GridView1_RowUpdating" OnRowCancelingEdit="GridView1_RowCancelingEdit" >
                         <Columns>
-                            <asp:BoundField DataField="className" HeaderText="Class Name" />
-                            <asp:BoundField DataField="fessAmount" HeaderText="Fees Amount" />
+                            <asp:BoundField DataField="className" HeaderText="Class" ReadOnly="True" />
+                            <asp:TemplateField HeaderText="Amount (Annual)">
+                                <EditItemTemplate>
+                                    <asp:TextBox ID="txtFeesEdit" runat="server" Text='<%# Eval("FessAmount") %>' CssClass="form-control"></asp:TextBox>
+                                </EditItemTemplate>
+                                <ItemTemplate>
+                                    <asp:Label ID="Label1" runat="server" Text='<%# Eval("FessAmount") %>'></asp:Label>
+                                </ItemTemplate>
+                                <ItemStyle HorizontalAlign="Center" />
+                            </asp:TemplateField>
+                            <asp:CommandField HeaderText="Command" ShowDeleteButton="True" ShowEditButton="True" >
+                            <ItemStyle HorizontalAlign="Center" />
+                            </asp:CommandField>
                         </Columns>
+                        <HeaderStyle BackColor="#5558C9" ForeColor="White" />
                     </asp:GridView>
                 </div>
             </div>

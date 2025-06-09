@@ -16,7 +16,6 @@ namespace SchoolManagementSystem.Admin
         {
             if (!IsPostBack)
             {
-                GetClass();
                 GetFees();
             }
         }
@@ -28,7 +27,7 @@ namespace SchoolManagementSystem.Admin
             ddlClass.DataTextField = "ClassName";
             ddlClass.DataValueField = "ClassId";
             ddlClass.DataBind();
-            ddlClass.Items.Insert(0,"Select Class");
+            ddlClass.Items.Insert(0, "Select Class");
         }
 
         protected void btnAdd_Click(object sender, EventArgs e)
@@ -39,7 +38,7 @@ namespace SchoolManagementSystem.Admin
                 DataTable dt = fn.Fetch("Select * from Fees where ClassId = '" + ddlClass.SelectedItem.Value + "' ");
                 if (dt.Rows.Count == 0)
                 {
-                    string query = "Insert into Fees values('"+ddlClass.SelectedItem.Value+"', '" + txtFeeAmounts.Text.Trim() + "')";
+                    string query = "Insert into Fees values('" + ddlClass.SelectedItem.Value + "', '" + txtFeeAmounts.Text.Trim() + "')";
                     fn.Query(query);
                     lblMsg.Text = "Inserted Succesffully !";
                     lblMsg.CssClass = "alert alert-success";
@@ -49,7 +48,7 @@ namespace SchoolManagementSystem.Admin
                 }
                 else
                 {
-                    lblMsg.Text = "Entered Dees already exist for <b>'"+classVal+"'</b> !";
+                    lblMsg.Text = "Entered Dees already exist for <b>'" + classVal + "'</b> !";
                     lblMsg.CssClass = "alert alert-warning";
                 }
 
@@ -64,9 +63,65 @@ namespace SchoolManagementSystem.Admin
 
         private void GetFees()
         {
-            DataTable dt = fn.Fetch("select c.className, f.fessAmount from Class c inner join Fees f ON f.ClassId = c.ClassId ");
+            DataTable dt = fn.Fetch("select f.FeesId, c.className, f.fessAmount from Class c inner join Fees f ON f.ClassId = c.ClassId ");
             GridView1.DataSource = dt;
             GridView1.DataBind();
+        }
+
+        protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            GridView1.PageIndex = e.NewPageIndex;
+            GetFees();
+        }
+
+
+        protected void GridView1_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+            GridView1.EditIndex = e.NewEditIndex;
+            GetClass();
+        }
+
+        protected void GridView1_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        {
+            GridView1.EditIndex = -1;
+            GetFees();
+        }
+
+        protected void GridView1_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        {
+            try
+            {
+                GridViewRow row = GridView1.Rows[e.RowIndex];
+                int cId = Convert.ToInt32(GridView1.DataKeys[e.RowIndex].Values[0]);
+                string feesAmount = (row.FindControl("txtFeesEdit") as TextBox).Text;
+                fn.Query($"Update Fees set FessAmount = {feesAmount} where FeesId = {cId}");
+                GridView1.EditIndex = -1;
+                GetFees();
+            }
+            catch (Exception ex)
+            {
+                string safeMessage = HttpUtility.JavaScriptStringEncode(ex.Message);
+                Response.Write($"<script>alert('{safeMessage}');</script>");
+            }
+        }
+
+        protected void GridView1_RowDeleting(object sender, GridViewDeleteEventArgs e)
+        {
+            GridViewRow row = GridView1.Rows[e.RowIndex];
+            int cId = Convert.ToInt32(GridView1.DataKeys[e.RowIndex].Values[0]);
+            try
+            {
+                fn.Query("Delete from Fees where FeesId = '" + cId + "' ");
+                GetFees();
+                lblMsg.Text = "Deleted Successfully !";
+                lblMsg.CssClass = "alert alert-success";
+                GetFees();
+            }
+            catch (Exception ex)
+            {
+                string safeMessage = HttpUtility.JavaScriptStringEncode(ex.Message);
+                Response.Write($"<script>alert('{safeMessage}');</script>");
+            }
         }
     }
 }
