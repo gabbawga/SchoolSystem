@@ -17,6 +17,7 @@ namespace SchoolManagementSystem.Admin
             if (!IsPostBack)
             {
                 GetFees();
+                GetClass();
             }
         }
 
@@ -71,14 +72,14 @@ namespace SchoolManagementSystem.Admin
         protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
             GridView1.PageIndex = e.NewPageIndex;
-            GetFees();
+      
         }
 
 
         protected void GridView1_RowEditing(object sender, GridViewEditEventArgs e)
         {
             GridView1.EditIndex = e.NewEditIndex;
-            GetClass();
+            GetFees();
         }
 
         protected void GridView1_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
