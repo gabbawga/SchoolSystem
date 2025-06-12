@@ -97,12 +97,26 @@ namespace SchoolManagementSystem.Admin
             }
         }
 
-
-
         protected void GridView1_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
             GridView1.EditIndex = -1;
             GetSubject();
+        }
+
+        protected void GridView1_RowDeleting(object sender, GridViewDeleteEventArgs e)
+        {
+            try
+            {
+                GridViewRow row = GridView1.Rows[e.RowIndex];
+                int idSubject = Convert.ToInt32(GridView1.DataKeys[e.RowIndex].Values[0]);
+                fn.Query($"delete from Subject where subjectId = {idSubject}");
+                GridView1.EditIndex = -1;   
+                GetSubject();
+            }
+            catch (Exception ex) {
+                string safeMessage = HttpUtility.JavaScriptStringEncode(ex.Message);
+                Response.Write($"<script>alert('{safeMessage}');</script>");
+            }
         }
     }
 
