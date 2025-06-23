@@ -19,6 +19,7 @@ namespace SchoolManagementSystem.Admin
                 GetTeacherSubject();
                 GetSubject();
                 GetClass();
+                GetTeacher();
             }
         }
 
@@ -40,12 +41,21 @@ namespace SchoolManagementSystem.Admin
             ddlSubject.DataBind();
         }
 
+        private void GetTeacher()
+        {
+            DataTable dt = fn.Fetch("select * from teacher");
+            ddlTeacher.DataSource = dt;
+            ddlTeacher.DataTextField = "Name";
+            ddlTeacher.DataValueField = "TeacherId";
+            ddlTeacher.DataBind();
+        }
+
         private void GetTeacherSubject()
         {
-            string query = $"select c.Classname, s.SubjectName, t.Name from TeacherSubject ts inner join Class c on ts.ClassId = c.ClassId inner join Subject s on ts.SubjectId = s.SubjectId inner join Teacher t on ts.TeacherId = t.TeacherId";
+            string query = $"select ts.Id, c.Classname, s.SubjectName, t.Name from TeacherSubject ts inner join Class c on ts.ClassId = c.ClassId inner join Subject s on ts.SubjectId = s.SubjectId inner join Teacher t on ts.TeacherId = t.TeacherId";
             DataTable dt = fn.Fetch(query);
-            //GridView1.DataSource = dt;
-            //GridView1.DataBind();
+            GridView1.DataSource = dt;
+            GridView1.DataBind();
             
         }
 
@@ -56,7 +66,7 @@ namespace SchoolManagementSystem.Admin
             string classId = ddlClass.SelectedItem.Value;
             try
             {
-                string query = $"Insert into TeacherSubject values({teacherId},{subjectId},{classId})";
+                string query = $"Insert into TeacherSubject values({classId},{subjectId},{teacherId})";
                 fn.Query(query);
 
                 lblMsg.Text = "Inserted Successfully !";
@@ -70,6 +80,38 @@ namespace SchoolManagementSystem.Admin
                 lblMsg.Text = "The subject or class already exists";
                 lblMsg.CssClass = "alert alert-warning";
             }
+        }
+
+        protected void GridView1_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        {
+            try
+            {
+
+
+            }
+            catch (Exception ex) { 
+            }
+        }
+
+        protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            GridView1.PageIndex = e.NewPageIndex;
+            GetTeacherSubject();
+        }
+
+        protected void GridView1_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        {
+
+        }
+
+        protected void GridView1_RowDeleting(object sender, GridViewDeleteEventArgs e)
+        {
+
+        }
+
+        protected void GridView1_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+
         }
     }
 }
