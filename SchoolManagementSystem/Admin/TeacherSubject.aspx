@@ -35,48 +35,49 @@
         </div>
         <div class="row mb-3 mr-lg-5 ml-lg-5">
             <div class="col-md-6">
-                <asp:GridView ID="GridView1" runat="server" CssClass="table table-hover" AutoGenerateColumns="False" DataKeyNames="Id"
-                    OnPageIndexChanging="GridView1_PageIndexChanging"
-                    OnRowCancelingEdit="GridView1_RowCancelingEdit"
+                <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" CssClass="table table-hover"
+                    DataKeyNames="Id"
                     OnRowEditing="GridView1_RowEditing"
                     OnRowUpdating="GridView1_RowUpdating"
-                    OnRowDeleting="GridView1_RowDeleting">
+                    OnRowCancelingEdit="GridView1_RowCancelingEdit"
+                    OnRowDeleting="GridView1_RowDeleting"
+                    OnPageIndexChanging="GridView1_PageIndexChanging"
+                    OnRowDataBound="GridView1_RowDataBound">
+
                     <Columns>
+                        
                         <asp:TemplateField HeaderText="Class">
                             <EditItemTemplate>
-                                <asp:DropDownList ID="ddlClassEdit" runat="server" CssClass="form-control"
-                                    SelectedValue='<%# Eval("ClassName") %>'>
-                                </asp:DropDownList>
+                                <asp:DropDownList ID="ddlClassEdit" runat="server" CssClass="form-control" />
                             </EditItemTemplate>
                             <ItemTemplate>
-                                <asp:Label ID="Label1" runat="server" Text='<%# Eval("ClassName") %>'></asp:Label>
+                                <asp:Label ID="lblClass" runat="server" Text='<%# Eval("ClassName") %>'></asp:Label>
                             </ItemTemplate>
                         </asp:TemplateField>
 
+                      
                         <asp:TemplateField HeaderText="Subject">
                             <EditItemTemplate>
-                                <asp:DropDownList ID="ddlSubjectEdit" runat="server" CssClass="form-control"
-                                    SelectedValue='<%# Eval("SubjectName") %>'>
-                                </asp:DropDownList>
+                                <asp:DropDownList ID="ddlSubjectEdit" runat="server" CssClass="form-control" />
                             </EditItemTemplate>
                             <ItemTemplate>
-                                <asp:Label ID="Label2" runat="server" Text='<%# Eval("SubjectName") %>'></asp:Label>
+                                <asp:Label ID="lblSubject" runat="server" Text='<%# Eval("SubjectName") %>'></asp:Label>
                             </ItemTemplate>
                         </asp:TemplateField>
 
+                     
                         <asp:TemplateField HeaderText="Teacher">
                             <EditItemTemplate>
-                                <asp:DropDownList ID="ddlTeacherEdit" runat="server" CssClass="form-control"
-                                    SelectedValue='<%# Eval("Name") %>'>
-                                </asp:DropDownList>
+                                <asp:DropDownList ID="ddlTeacherEdit" runat="server" CssClass="form-control" />
                             </EditItemTemplate>
                             <ItemTemplate>
-                                <asp:Label ID="Label3" runat="server" Text='<%# Eval("Name") %>'></asp:Label>
+                                <asp:Label ID="lblTeacher" runat="server" Text='<%# Eval("Name") %>'></asp:Label>
                             </ItemTemplate>
                         </asp:TemplateField>
 
-                         <asp:CommandField ShowCancelButton="False" ShowDeleteButton="True" ShowEditButton="True" />
+                        <asp:CommandField ShowEditButton="True" ShowDeleteButton="True" />
                     </Columns>
+
                     <HeaderStyle BackColor="#5558C9" ForeColor="White" />
                 </asp:GridView>
             </div>

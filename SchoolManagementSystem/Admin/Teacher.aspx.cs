@@ -33,7 +33,7 @@ namespace SchoolManagementSystem.Admin
         {
             try
             {
-                //aqui nos iremos pegar dado de todos os inputs
+                
                 string profName = txtName.Text.Trim();
                 string profEmail = txtEmail.Text.Trim();
                 string profGender = ddlGender.SelectedItem.Text.Trim();

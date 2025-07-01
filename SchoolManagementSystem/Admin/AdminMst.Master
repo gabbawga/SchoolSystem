@@ -54,7 +54,7 @@
                     </div>
 
                     <ul class="sidebar_menu">
-                        <li><a href="../Admin/AdiminHome.aspx">
+                        <li><a href="../Admin/AdminHome.aspx">
                             <div class="icon"><i class="fas fa-home"></i></div>
                             <div class="title">Home</div>
                         </a></li>
