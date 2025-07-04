@@ -6,7 +6,7 @@ Sistema web desenvolvido em **ASP.NET Web Forms** para gerenciamento de dados es
 ## 🖼️ Demonstração (GIF)
 
 <p align="center">
-  <img src="SchoolManagementSystem/Image/2025-07-04_15h32_53.gif" alt="Demonstração do Sistema" width="600"/>
+  <img src="Image/2025-07-04_15h32_53.gif" alt="Demonstração do Sistema" width="600"/>
 </p>
 
 ---
