@@ -23,21 +23,21 @@ namespace SchoolManagementSystem.Admin
             {
                 GetTeacher();
             }
-         
+
         }
 
         private void GetTeacher()
         {
             DataTable dt = fnx.Fetch("select * from Teacher");
-            GridView1.DataSource = dt;  
-            GridView1.DataBind();   
+            GridView1.DataSource = dt;
+            GridView1.DataBind();
         }
 
         protected void btnAdd_Click(object sender, EventArgs e)
         {
             try
             {
-                
+
                 string profName = txtName.Text.Trim();
                 string profEmail = txtEmail.Text.Trim();
                 string profGender = ddlGender.SelectedItem.Text.Trim();
@@ -46,26 +46,20 @@ namespace SchoolManagementSystem.Admin
                 string profPassword = txtPassword.Text.Trim();
                 string profCalendar = txtCalendar.Text.Trim();
                 string query = $"select * from Teacher where email = '{profEmail}'";
-                DataTable dt = fnx.Fetch(query);
-                if (dt.Rows.Count == 0)
-                {
-                    string insertQuery = $"insert into Teacher values ('{profName}', '{profCalendar}', '{profGender}', '{profMobile}', '{profEmail}', '{profAddress}', '{profPassword}')";
-                    fnx.Query(insertQuery);
-                    lblMsg.Text = "Inserted Successfully !";
-                    lblMsg.CssClass = "alert alert-success";
-                    txtName.Text = string.Empty;
-                    txtEmail.Text = string.Empty;
-                    ddlGender.SelectedIndex = 0;
-                    txtMobile.Text = string.Empty;
-                    txtAddress.Text = string.Empty;
-                    txtPassword.Text = string.Empty;
-                    txtCalendar.Text = string.Empty;
-                }
-                else
-                {
-                    lblMsg.Text = "The teacher already exists";
-                    lblMsg.CssClass = "alert alert-warning";
-                }
+
+                string insertQuery = $"insert into Teacher values ('{profName}', '{profCalendar}', '{profGender}', '{profMobile}', '{profEmail}', '{profAddress}', '{profPassword}')";
+                fnx.Query(insertQuery);
+                lblMsg.Text = "Inserted Successfully !";
+                lblMsg.CssClass = "alert alert-success";
+                txtName.Text = string.Empty;
+                txtEmail.Text = string.Empty;
+                ddlGender.SelectedIndex = 0;
+                txtMobile.Text = string.Empty;
+                txtAddress.Text = string.Empty;
+                txtPassword.Text = string.Empty;
+                txtCalendar.Text = string.Empty;
+
+
 
             }
             catch (Exception ex)
@@ -87,7 +81,7 @@ namespace SchoolManagementSystem.Admin
 
         protected void GridView1_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
-            GridView1.EditIndex = -1;   
+            GridView1.EditIndex = -1;
             GetTeacher();
         }
 
@@ -123,14 +117,14 @@ namespace SchoolManagementSystem.Admin
                 string profName = ((TextBox)row.FindControl("txtNameEdit")).Text.Trim();
                 string profMobile = ((TextBox)row.FindControl("txtMobileEdit")).Text.Trim();
                 string profPassword = ((TextBox)row.FindControl("txtPasswordEdit")).Text.Trim();
-                
+
                 string query = $"update from Teacher set Name = '{profName}' and Mobile = {profMobile} and Password = {profPassword} where TeacherId = {teacherId}";
 
                 GridView1.EditIndex = -1;
                 GetTeacher();
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 string safeMessage = HttpUtility.JavaScriptStringEncode(ex.Message);
                 Response.Write($"<script>alert('{safeMessage}');</script>");

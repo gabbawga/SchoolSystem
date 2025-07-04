@@ -290,7 +290,6 @@
     </Compile>
     <Compile Include="Admin\TeacherSubject.aspx.cs">
       <DependentUpon>TeacherSubject.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Admin\TeacherSubject.aspx.designer.cs">
       <DependentUpon>TeacherSubject.aspx</DependentUpon>
