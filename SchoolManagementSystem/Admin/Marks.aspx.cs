@@ -1,15 +1,16 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Xml.Linq;
 using SchoolManagementSystem.Models;
+
 namespace SchoolManagementSystem.Admin
 {
-    public partial class Student : System.Web.UI.Page
+    public partial class Marks : System.Web.UI.Page
     {
         CommonFn.Commonfnx fn = new CommonFn.Commonfnx();
         protected void Page_Load(object sender, EventArgs e)
@@ -18,59 +19,65 @@ namespace SchoolManagementSystem.Admin
             {
                 Response.Redirect("../Login.aspx");
             }
-            if (!IsPostBack)
+            if (!IsPostBack) 
             {
-                GetStudent();
+                GetMarks();
                 GetClass();
+                GetSubject();
             }
+
+        }
+
+        private void GetSubject()
+        {
+            DataTable dt = fn.Fetch("select * from subject");
+            ddlSubject.DataSource = dt;
+            ddlSubject.DataTextField = "SubjectName";
+            ddlSubject.DataValueField = "SubjectId";
+            ddlSubject.DataBind();
         }
 
         private void GetClass()
         {
-            DataTable dt = fn.Fetch($"select * from class");
+            DataTable dt = fn.Fetch("select * from class");
             ddlClass.DataSource = dt;
-            ddlClass.DataValueField = "ClassId";
             ddlClass.DataTextField = "ClassName";
+            ddlClass.DataValueField = "ClassId";
             ddlClass.DataBind();
         }
 
-        private void GetStudent()
+        private void GetMarks()
         {
-
-            DataTable dt = fn.Fetch($"select s.StudentId, s.Name, s.DOB, s.Gender, s.Mobile, s.RollNo, s.Address, c.ClassName, s.ClassId from Student s inner join  Class c on s.ClassId = c.ClassId");
+            DataTable dt = fn.Fetch("select e.ExameId, c.ClassName, s.SubjectName, e.RollNo, e.TotalMarks, e.OutOfMarks from Exam e inner join Class c on e.classId = c.ClassId inner join Subject s on e.SubjectId = s.SubjectId");
             GridView1.DataSource = dt;
             GridView1.DataBind();
         }
 
         protected void btnAdd_Click(object sender, EventArgs e)
         {
+
             try
             {
-                string name = txtName.Text.Trim();
-                string dob = txtCalendar.Text.Trim();
-                string gender = ddlGender.SelectedItem.Text.Trim();
-                string mobile = txtMobile.Text.Trim();
-                string rollNo = txtRollNo.Text.Trim();
-                string address = txtAddress.Text.Trim();
                 string classId = ddlClass.SelectedItem.Value;
+                string subjectId = ddlSubject.SelectedItem.Value;
+                string rollNumber = txtRollNumber.Text.Trim();
+                string marks = txtTotalMark.Text.Trim();
+                string outMarks = txtOutOfMark.Text.Trim();
 
-                string query = $"Insert into Student  Values('{name}','{dob}','{gender}',{mobile},'{rollNo}','{address}',{classId})";
+                string query = $"Insert into Exam values({classId}, {subjectId}, '{rollNumber}', {marks}, {outMarks})";
 
                 fn.Query(query);
-
 
                 lblMsg.Text = "Inserted Successfully";
                 lblMsg.CssClass = "alert alert-success";
 
-                txtName.Text = string.Empty;
-                txtRollNo.Text = string.Empty;
-                ddlGender.SelectedIndex = 0;
-                txtMobile.Text = string.Empty;
-                txtAddress.Text = string.Empty;
                 ddlClass.SelectedIndex = 0;
-                txtCalendar.Text = string.Empty;
+                ddlSubject.SelectedIndex = 0;
+                txtRollNumber.Text = string.Empty;
+                txtTotalMark.Text = string.Empty;
+                txtOutOfMark.Text = string.Empty;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 string safeMessage = HttpUtility.JavaScriptStringEncode(ex.Message);
                 Response.Write($"<script>alert('{safeMessage}');</script>");
@@ -80,13 +87,13 @@ namespace SchoolManagementSystem.Admin
         protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
             GridView1.PageIndex = e.NewPageIndex;
-            GetStudent();
+            GetMarks();
         }
 
         protected void GridView1_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
             GridView1.EditIndex = -1;
-            GetStudent();
+            GetMarks();
         }
 
         protected void GridView1_RowDeleting(object sender, GridViewDeleteEventArgs e)
@@ -94,10 +101,10 @@ namespace SchoolManagementSystem.Admin
             try
             {
                 GridViewRow row = GridView1.Rows[e.RowIndex];
-                int StudentId = Convert.ToInt32(GridView1.DataKeys[e.RowIndex].Value);
-                fn.Query($"delete from Student where StudentId = {StudentId}");
+                int examId = Convert.ToInt32(GridView1.DataKeys[e.RowIndex].Value);
+                fn.Query($"delete from Student where StudentId = {examId}");
                 GridView1.EditIndex = -1;
-                GetStudent();
+                GetMarks();
             }
             catch (Exception ex)
             {
@@ -109,7 +116,7 @@ namespace SchoolManagementSystem.Admin
         protected void GridView1_RowEditing(object sender, GridViewEditEventArgs e)
         {
             GridView1.EditIndex = e.NewEditIndex;
-            GetStudent();
+            GetMarks();
         }
 
         protected void GridView1_RowUpdating(object sender, GridViewUpdateEventArgs e)
@@ -117,21 +124,24 @@ namespace SchoolManagementSystem.Admin
             try
             {
                 GridViewRow row = GridView1.Rows[e.RowIndex];
-                int StudentId = Convert.ToInt32(GridView1.DataKeys[e.RowIndex].Value);
-                string name = ((TextBox)row.FindControl("txtNameEdit")).Text.Trim();
-                string mobile = ((TextBox)row.FindControl("txtMobileEdit")).Text.Trim();
+                int examId = Convert.ToInt32(GridView1.DataKeys[e.RowIndex].Value);
+                string classId = ((DropDownList)GridView1.Rows[e.RowIndex].FindControl("ddlClassEdit")).SelectedValue;
+                string subjectId = ((DropDownList)GridView1.Rows[e.RowIndex].FindControl("ddlSubjectEdit")).SelectedValue;
                 string rollNo = ((TextBox)row.FindControl("txtRollNolEdit")).Text.Trim();
-                string classId = ((DropDownList)GridView1.Rows[e.RowIndex].Cells[2].FindControl("ddlClassEdit")).SelectedValue;
-                string address = ((TextBox)row.FindControl("txtAddressEdit")).Text.Trim();
+                string totalMarks = ((TextBox)row.FindControl("txtTotalMarksEdit")).Text.Trim();
+                string totalOutMarks = ((TextBox)row.FindControl("txtOutOfMarkEdit")).Text.Trim();
 
-                fn.Query($"Update Student set Name = '{name}', Mobile = '{mobile}', RollNo = '{rollNo}', classId = {classId}, Address = '{address}' where StudentId = {StudentId}");
+
+                string query = $"Update Exam set classId = {classId}, subjectId = {subjectId}, RollNo = '{rollNo}', TotalMarks = {totalMarks}, OutOfMarks = {totalOutMarks} where ExameId = {examId}";
+
+                fn.Query(query);
 
                 GridView1.EditIndex = -1;
 
                 lblMsg.Text = "Inserted Successfully !";
                 lblMsg.CssClass = "alert alert-success";
 
-                GetStudent();
+                GetMarks();
 
             }
             catch (Exception ex)
@@ -161,6 +171,23 @@ namespace SchoolManagementSystem.Admin
                     if (item != null)
                         ddlClass.SelectedValue = item.Value;
                 }
+
+
+                DropDownList ddlSubject = (DropDownList)e.Row.FindControl("ddlSubjectEdit");
+                if (ddlSubject != null)
+                {
+                    DataTable subjectTable = fn.Fetch("SELECT * FROM Subject");
+                    ddlSubject.DataSource = subjectTable;
+                    ddlSubject.DataTextField = "SubjectName";
+                    ddlSubject.DataValueField = "SubjectId";
+                    ddlSubject.DataBind();
+
+                    string subjectName = DataBinder.Eval(e.Row.DataItem, "SubjectName").ToString();
+                    ListItem item = ddlSubject.Items.FindByText(subjectName);
+                    if (item != null)
+                        ddlSubject.SelectedValue = item.Value;
+                }
+
             }
         }
     }
