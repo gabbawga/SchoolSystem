@@ -6,7 +6,7 @@ Sistema web desenvolvido em **ASP.NET Web Forms** para gerenciamento de dados es
 ## 🖼️ Demonstração (GIF)
 
 <p align="center">
-  <img src="Image/demonstracao" alt="Demonstração do Sistema" width="600"/>
+  <img src="Image/demonstracao.gif" alt="Demonstração do Sistema" width="600"/>
 </p>
 
 ---
