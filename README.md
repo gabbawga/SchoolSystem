@@ -3,7 +3,13 @@
 Sistema web desenvolvido em **ASP.NET Web Forms** para gerenciamento de dados escolares. Possui autenticação com controle de sessão, dashboard com cards informativos e layout responsivo com Bootstrap.
 
 ---
+## 🖼️ Demonstração (GIF)
 
+<p align="center">
+  <img src="Image/2025-07-04_15h32_53.gif" alt="Demonstração do Sistema" width="600"/>
+</p>
+
+---
 ## 🚀 Tecnologias Utilizadas
 
 - ASP.NET Web Forms (.NET Framework)
